@@ -62,16 +62,30 @@
             },
             klass: {
                 has: function(el, name){
+                    if(el.classList) {
+                        return el.classList.contains(name);
+                    }
+
                     return (el.className).indexOf(name) !== -1;
                 },
                 add: function(el, name){
                     if(!utils.klass.has(el, name) && settings.addBodyClasses){
                         el.className += " "+name;
+                        if(el.classList) {
+                            el.classList.add(name);
+                        } else {
+                            el.className += ' ' + name;
+                        }
                     }
                 },
                 remove: function(el, name){
                     if(settings.addBodyClasses){
                         el.className = (el.className).replace(name, "").replace(/^\s+|\s+$/g, '');
+                        if(el.classList) {
+                            el.classList.remove(name);
+                        } else {
+                            el.className = (el.className).replace(name, '').replace(/^\s+|\s+$/g, '');
+                        }
                     }
                 }
             },
