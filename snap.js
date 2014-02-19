@@ -198,9 +198,12 @@
                     cache.easing = false;
                     clearInterval(cache.animatingInterval);
 
-                    if(cache.easingTo===0){
-                        utils.klass.remove(doc.body, 'snapjs-right');
-                        utils.klass.remove(doc.body, 'snapjs-left');
+                    if(cache.easingTo === 0){
+                        if(settings.disable === 'left') {
+                            utils.klass.remove(doc.body, 'snapjs-right');
+                        } else {
+                            utils.klass.remove(doc.body, 'snapjs-left');
+                        }
                     }
 
                     utils.dispatchEvent('animated');
@@ -338,11 +341,19 @@
 
                         if(settings.addBodyClasses){
                             if((absoluteTranslation)>0){
-                                utils.klass.add(doc.body, 'snapjs-left');
-                                utils.klass.remove(doc.body, 'snapjs-right');
+                                if(!utils.klass.has(doc.body, 'snapjs-left')) {
+                                    utils.klass.add(doc.body, 'snapjs-left');
+                                }
+                                if(utils.klass.has(doc.body, 'snapjs-right')) {
+                                    utils.klass.remove(doc.body, 'snapjs-right');
+                                }
                             } else if((absoluteTranslation)<0){
-                                utils.klass.add(doc.body, 'snapjs-right');
-                                utils.klass.remove(doc.body, 'snapjs-left');
+                                if(!utils.klass.has(doc.body, 'snapjs-right')) {
+                                    utils.klass.add(doc.body, 'snapjs-right');
+                                }
+                                if(utils.klass.has(doc.body, 'snapjs-left')) {
+                                    utils.klass.remove(doc.body, 'snapjs-left');
+                                }
                             }
                         }
 
@@ -489,19 +500,26 @@
          */
         this.open = function(side) {
             utils.dispatchEvent('open');
-            utils.klass.remove(doc.body, 'snapjs-expand-left');
-            utils.klass.remove(doc.body, 'snapjs-expand-right');
+            if(settings.disable === 'left') {
+                utils.klass.remove(doc.body, 'snapjs-expand-right');
+            } else {
+                utils.klass.remove(doc.body, 'snapjs-expand-left');
+            }
 
             if (side === 'left') {
                 cache.simpleStates.opening = 'left';
                 cache.simpleStates.towards = 'right';
                 utils.klass.add(doc.body, 'snapjs-left');
-                utils.klass.remove(doc.body, 'snapjs-right');
+                if(!settings.disable === 'right') {
+                    utils.klass.remove(doc.body, 'snapjs-right');
+                }
                 action.translate.easeTo(settings.maxPosition);
             } else if (side === 'right') {
                 cache.simpleStates.opening = 'right';
                 cache.simpleStates.towards = 'left';
-                utils.klass.remove(doc.body, 'snapjs-left');
+                if(!settings.disable === 'left') {
+                    utils.klass.remove(doc.body, 'snapjs-left');
+                }
                 utils.klass.add(doc.body, 'snapjs-right');
                 action.translate.easeTo(settings.minPosition);
             }
