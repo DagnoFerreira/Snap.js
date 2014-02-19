@@ -12,6 +12,7 @@
 /*global define, module, ender*/
 (function(win, doc) {
     'use strict';
+
     var Snap = Snap || function(userOpts) {
         var settings = {
             element: null,
@@ -70,7 +71,6 @@
                 },
                 add: function(el, name){
                     if(!utils.klass.has(el, name) && settings.addBodyClasses){
-                        el.className += " "+name;
                         if(el.classList) {
                             el.classList.add(name);
                         } else {
@@ -80,7 +80,6 @@
                 },
                 remove: function(el, name){
                     if(settings.addBodyClasses){
-                        el.className = (el.className).replace(name, "").replace(/^\s+|\s+$/g, '');
                         if(el.classList) {
                             el.classList.remove(name);
                         } else {
@@ -95,7 +94,7 @@
                 }
             },
             vendor: function(){
-                var tmp = doc.createElement("div"),
+                var tmp = doc.createElement('div'),
                     prefixes = 'webkit Moz O ms'.split(' '),
                     i;
                 for (i in prefixes) {
@@ -141,14 +140,14 @@
                     if (element.addEventListener) {
                         return element.addEventListener(eventName, func, false);
                     } else if (element.attachEvent) {
-                        return element.attachEvent("on" + eventName, func);
+                        return element.attachEvent('on' + eventName, func);
                     }
                 },
                 removeEvent: function addEvent(element, eventName, func) {
                     if (element.addEventListener) {
                         return element.removeEventListener(eventName, func, false);
                     } else if (element.attachEvent) {
-                        return element.detachEvent("on" + eventName, func);
+                        return element.detachEvent('on' + eventName, func);
                     }
                 },
                 prevent: function(e) {
@@ -221,7 +220,7 @@
                         cache.animatingInterval = setInterval(function() {
                             utils.dispatchEvent('animating');
                         }, 1);
-                        
+
                         utils.events.addEvent(settings.element, utils.transitionCallback(), action.translate.easeCallback);
                         action.translate.x(n);
                     }
@@ -233,7 +232,7 @@
                     if( (settings.disable==='left' && n>0) ||
                         (settings.disable==='right' && n<0)
                     ){ return; }
-                    
+
                     if( !settings.hyperextensible ){
                         if( n===settings.maxPosition || n>settings.maxPosition ){
                             n=settings.maxPosition;
@@ -241,7 +240,7 @@
                             n=settings.minPosition;
                         }
                     }
-                    
+
                     n = parseInt(n, 10);
                     if(isNaN(n)){
                         n = 0;
@@ -275,25 +274,24 @@
                     // No drag on ignored elements
                     var target = e.target ? e.target : e.srcElement,
                         ignoreParent = utils.parentUntil(target, 'data-snap-ignore');
-                    
+
                     if (ignoreParent) {
                         utils.dispatchEvent('ignore');
                         return;
                     }
-                    
-                    
+
                     if(settings.dragger){
                         var dragParent = utils.parentUntil(target, settings.dragger);
-                        
+
                         // Only use dragger if we're in a closed state
-                        if( !dragParent && 
-                            (cache.translation !== settings.minPosition && 
+                        if( !dragParent &&
+                            (cache.translation !== settings.minPosition &&
                             cache.translation !== settings.maxPosition
                         )){
                             return;
                         }
                     }
-                    
+
                     utils.dispatchEvent('start');
                     settings.element.style[cache.vendor+'Transition'] = '';
                     cache.isDragging = true;
@@ -574,8 +572,8 @@
     if (typeof ender === 'undefined') {
         this.Snap = Snap;
     }
-    if ((typeof define === "function") && define.amd) {
-        define("snap", [], function() {
+    if ((typeof define === 'function') && define.amd) {
+        define('snap', [], function() {
             return Snap;
         });
     }
